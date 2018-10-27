@@ -4,30 +4,30 @@
 PrintANNIEEvent::PrintANNIEEvent():Tool(){}
 
 bool PrintANNIEEvent::Initialise(std::string configfile, DataModel &data){
-	
+
 	if(verbose) cout<<"Initializing tool PrintANNIEEvent"<<endl;
-	
+
 	/////////////////// Useful header ///////////////////////
 	if(configfile!="") m_variables.Initialise(configfile); //loading config file
 	//m_variables.Print();
-	
+
 	m_data= &data; //assigning transient data pointer
 	/////////////////////////////////////////////////////////////////
-	
+
 	m_variables.Get("verbose",verbose);
 	//verbose=10;
-	
+
 	return true;
 }
 
 bool PrintANNIEEvent::Execute(){
-	
+
 	if(verbose) cout<<"executing PrintANNIEEvent"<<endl;
 	int annieeventexists = m_data->Stores.count("ANNIEEvent");
 	if(!annieeventexists){ cerr<<"no ANNIEEvent store!"<<endl; /*return false;*/};
 	//m_data->Log->Log(logmessage.str(),1,verbose);
 	//logmessage.str(""); ??
-	
+
 	// Get the contents to be printed
 	if(verbose>1) cout<<"getting contents to be printed from ANNIEEvent at "<<m_data->Stores["ANNIEEvent"]<<endl;
 	m_data->Stores["ANNIEEvent"]->Get("RunNumber",RunNumber);
@@ -49,7 +49,7 @@ bool PrintANNIEEvent::Execute(){
 	m_data->Stores["ANNIEEvent"]->Get("MCTriggernum",MCTriggernum);
 	m_data->Stores["ANNIEEvent"]->Get("MCFile",MCFile);
 	m_data->Stores["ANNIEEvent"]->Get("BeamStatus",BeamStatus);
-	
+
 	cout<<"RunNumber : "<<RunNumber<<endl;
 	cout<<"SubrunNumber : "<<SubrunNumber<<endl;
 	cout<<"EventNumber : "<<EventNumber<<endl;
@@ -208,7 +208,12 @@ bool PrintANNIEEvent::Execute(){
 		cout<<"Num TriggerData Entries : "<<TriggerData->size()<<endl;
 		if(verbose>1){
 			cout<<"TriggerData : {"<<endl;
-			for(auto&& atrigger : *TriggerData) atrigger.Print();
+			for(auto&& atrigger : *TriggerData)
+			{
+				cout << "\t" << atrigger.first << " : {" endl;
+				atrigger.second.Print();
+				cout << "\t}" << endl;
+			}
 			cout<<"}"<<endl;
 		}
 	} else {
@@ -221,11 +226,11 @@ bool PrintANNIEEvent::Execute(){
 	cout<<"MCFile : "<<MCFile<<endl;
 	if(BeamStatus) { cout<<"BeamStatus : "; BeamStatus->Print(); }
 	else { cout<<"No BeamStatus"<<endl; }
-	
+
 	return true;
 }
 
 bool PrintANNIEEvent::Finalise(){
-	
+
 	return true;
 }

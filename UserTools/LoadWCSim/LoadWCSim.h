@@ -17,6 +17,7 @@
 #include "MRDspecs.hh"
 #include "ChannelKey.h"
 #include "BeamStatus.h"
+#include "MinibufferLabel.h"
 
 class LoadWCSim: public Tool {
 
@@ -37,15 +38,15 @@ private:
 	WCSimRootTrigger* atrigt, *atrigm, *atrigv;
 	WCSimRootGeom* wcsimrootgeom;
 	WCSimRootOptions* wcsimrootopts;
-	
+
 	long NumEvents;
-	
+
 	////////////////
 	// things that will be filled into the store from this WCSim file.
 	// note: filling everything in the right format is a complex process;
 	// just do a simple filling here: this will be properly handled by the conversion
 	// from WCSim to Raw and the proper RawReader Tools
-	// bool MCFlag=true; 
+	// bool MCFlag=true;
 	std::string MCFile;
 	uint64_t MCEventNum;
 	uint16_t MCTriggernum;
@@ -57,9 +58,9 @@ private:
 	std::vector<MCParticle>* MCParticles;
 	std::map<ChannelKey,std::vector<Hit>>* TDCData;
 	std::map<ChannelKey,std::vector<Hit>>* MCHits;
-	std::vector<TriggerClass>* TriggerData;
+	std::map<MinibufferLabel, std::vector<TriggerClass>>* TriggerData;
 	BeamStatusClass* BeamStatus;
-	
+
 	// currently used to separate Veto/MRD PMTs
 	int numvetopmts;
 
